@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+  <script src="/js/moment-timezone.js"></script>
+  <script src="/js/moment-timezone-with-data.js"></script>
+</head>
+<body>
+
+</body>
+
+<script >
+
+  console.log(moment.tz.names(), '时区列表')
+
+  let timer = null;
+  let current = 0;
+  const getTimer = () => {
+    return axios.get('/time').then(res => res.data)
+  }
+
+  const init = () => {
+    getTimer().then(data => {
+      timer = toUtc(data)
+      renderBody(timer.format('YYMMMDD HHmmss').toUpperCase() + 'Z');
+    })
+  }
+  
+  const toUtc = ({
+    location,
+    timezone,
+    timestamp,
+  }) => moment.tz(timestamp * 1000, 
+    `${location}`
+  );
+
+  const renderBody = (content) => document.body.innerHTML = content;
+
+  const addTimer = (moment, num, company) => moment.add(num, company)
+
+  const interval = setInterval(() => {
+    if (current === 30) {
+      current = 0;
+      return init()
+    }
+    renderBody(addTimer(timer, 1, 's').format('YYMMMDD HHmmss').toUpperCase() + 'Z');
+    current ++
+  }, 1000)
+
+  init();
+</script>
+</html>
