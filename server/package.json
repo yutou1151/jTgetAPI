@@ -1,6 +1,6 @@
 {
-  "name": "express-demo",
-  "version": "1.0.0",
+  "name": "jTgetAPI - Time",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
